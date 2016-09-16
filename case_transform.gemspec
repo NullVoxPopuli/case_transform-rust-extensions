@@ -18,8 +18,10 @@ Gem::Specification.new do |s|
   s.summary     = "CaseTransform-#{CaseTransform::VERSION}"
   s.description = 'Extraction of the key_transform abilities of ActiveModelSerializers'
 
-  s.files        = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
+  s.files        = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*', 'ext/**/*']
   s.require_path = 'lib'
+
+  s.extensions = Dir['ext/extconf.rb']
 
   s.test_files = s.files.grep(%r{^(test|spec|features)/})
 
