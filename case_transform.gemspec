@@ -8,13 +8,13 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'case_transform/version'
 
 Gem::Specification.new do |s|
-  s.name        = 'case_transform'
+  s.name        = 'case_transform-rust-extensions'
   s.version     = CaseTransform::VERSION
   s.platform    = Gem::Platform::RUBY
   s.license     = 'MIT'
-  s.authors     = ['L. Preston Sego III', 'Ben Mills']
+  s.authors     = ['L. Preston Sego III', 'Ben Mills', 'Dmitry Gritsay']
   s.email       = 'LPSego3+dev@gmail.com'
-  s.homepage    = 'https://github.com/NullVoxPopuli/case_transform'
+  s.homepage    = 'https://github.com/NullVoxPopuli/case_transform-rust-extensions'
   s.summary     = "CaseTransform-#{CaseTransform::VERSION}"
   s.description = 'Extraction of the key_transform abilities of ActiveModelSerializers'
 
@@ -25,7 +25,8 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 2.0'
 
-  s.add_runtime_dependency 'activesupport'
+  # Rust
+  s.add_runtime_dependency 'thermite'
 
   s.add_development_dependency 'rake'
 
@@ -37,4 +38,8 @@ Gem::Specification.new do |s|
   # Debugging
   s.add_development_dependency 'awesome_print'
   s.add_development_dependency 'pry-byebug'
+
+  # Benchmarking
+  s.add_development_dependency 'benchmark-ips'
+  s.add_development_dependency 'activesupport'
 end
