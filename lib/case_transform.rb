@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'case_transform/version'
+require_relative './case_transform/version'
 require 'thermite/config'
 require 'fiddle'
 
