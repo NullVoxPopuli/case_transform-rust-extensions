@@ -8,13 +8,13 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'case_transform/version'
 
 Gem::Specification.new do |s|
-  s.name        = 'case_transform'
+  s.name        = 'case_transform-rust-extensions'
   s.version     = CaseTransform::VERSION
   s.platform    = Gem::Platform::RUBY
   s.license     = 'MIT'
   s.authors     = ['L. Preston Sego III', 'Ben Mills', 'Dmitry Gritsay']
   s.email       = 'LPSego3+dev@gmail.com'
-  s.homepage    = 'https://github.com/NullVoxPopuli/case_transform'
+  s.homepage    = 'https://github.com/NullVoxPopuli/case_transform-rust-extensions'
   s.summary     = "CaseTransform-#{CaseTransform::VERSION}"
   s.description = 'Extraction of the key_transform abilities of ActiveModelSerializers'
 
