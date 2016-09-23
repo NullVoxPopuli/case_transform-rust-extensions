@@ -4,11 +4,6 @@ require 'mkmf'
 
 create_makefile 'rutgem'
 
-# pwd
-# ls -la
-# cd ./case_transform
-# pwd
-# cargo build
 mkf = %{
 .ONESHELL:
 all:
