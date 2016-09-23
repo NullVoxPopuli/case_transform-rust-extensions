@@ -4,6 +4,7 @@ rvm:
   - "2.3.0"
   - "2.3.1"
   - ruby-head
+before_install: curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain nightly -y
 script: "bundle exec rake"
 branches:
   only: master
