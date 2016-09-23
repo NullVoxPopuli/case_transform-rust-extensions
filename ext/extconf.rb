@@ -1,17 +1,19 @@
 # frozen_string_literal: true
-# NOTE: Thi file must be tab-delimited
+# NOTE: This file must be tab-delimited
 require 'mkmf'
 
 create_makefile 'rutgem'
 
+# pwd
+# ls -la
+# cd ./case_transform
+# pwd
+# cargo build
 mkf = %{
 .ONESHELL:
 all:
-	pwd
-	ls -la
-	cd ./case_transform
-	pwd
-	cargo build
+	cd case_transform
+	sh ./build.sh
 
 clean:
 	rm -rf ./case_transform/target
