@@ -4,7 +4,7 @@ require 'mkmf'
 
 create_makefile 'rutgem'
 
-mkf = %{
+mkf = %(
 .ONESHELL:
 all:
 	cd case_transform
@@ -14,6 +14,6 @@ clean:
 	rm -rf ./case_transform/target
 
 install: ;
-}
+)
 
 File.write('Makefile', mkf)
