@@ -1,4 +1,4 @@
-command_exists () {
+command_exists() {
   type "$1" &> /dev/null ;
 }
 
@@ -14,19 +14,23 @@ build() {
     exit 1
   fi
 
-  cargo build --release
+  $HOME/.cargo/bin/cargo build --release
 }
 
-echo ""
-echo "current directory"
-echo `pwd`
-echo ""
+CARGO_SOURCE_LINE='source $HOME/.cargo/env'
+ensure_cargo_sourced() {
+  FILE=~/.bash_profile
+  grep -q "$CARGO_SOURCE_LINE" "$FILE" || echo "$CARGO_SOURCE_LINE" >> "$FILE"
+}
 
-if ! command_exists rustc
-then
+if ! type rustc > /dev/null; then
   echo "rustc is missing. rustup will be installed to provide rustc..."
 
   curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain nightly -y
+
+  ensure_cargo_sourced
+else
+  echo "rustc exists..."
 fi
 
 build

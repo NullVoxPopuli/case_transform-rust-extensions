@@ -107,6 +107,7 @@ fn to_snake_case(key: String) -> String {
     key.to_snake_case()
 }
 
+
 class!(CaseTransform);
 
 methods! (
