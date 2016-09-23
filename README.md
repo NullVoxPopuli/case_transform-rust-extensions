@@ -42,6 +42,11 @@ or
 gem install case_transform-rust-extensions
 ```
 
+### Installation Dependencies
+
+- curl
+- git
+
 ## Usage
 
 ```ruby

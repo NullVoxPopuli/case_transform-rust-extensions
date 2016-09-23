@@ -1,28 +1,32 @@
-rust_path=$(which rustc)
-cargo_path=$(which cargo)
+command_exists () {
+  type "$1" &> /dev/null ;
+}
 
-if [ -z rust_path ]
+build() {
+  echo ""
+  echo "rustc: $(which rustc)"
+  echo "cargo: $(which cargo)"
+  echo ""
+
+  if ! command_exists rustc
+  then
+    echo "Rust still not installed..."
+    exit 1
+  fi
+
+  cargo build --release
+}
+
+echo ""
+echo "current directory"
+echo `pwd`
+echo ""
+
+if ! command_exists rustc
 then
   echo "rustc is missing. rustup will be installed to provide rustc..."
 
-  if [ -z cargo_path ]
-  then
-    echo "cargo is missing. rustup will be installed to provide cargo..."
-
-    curl https://sh.rustup.rs -sSf | sh
-  fi
+  curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain nightly -y
 fi
 
-echo "rustc and cargo are installed"
-echo "rustc: "
-echo `which rustc`
-echo "cargo: "
-echo `which cargo`
-
-if [ -z rust_path ]
-then
-  echo "Rust still not installed..."
-  exit 1
-fi
-
-cargo build
+build
