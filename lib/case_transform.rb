@@ -31,22 +31,22 @@ module CaseTransform
       @underscore_cache ||= {}
     end
 
-    def camel(value, cache=false)
+    def camel(value, cache = false)
       return camel_rust(value) unless cache
       camel_cache[value] ||= camel_rust(value)
     end
 
-    def camel_lower(value, cache=false)
+    def camel_lower(value, cache = false)
       return camel_lower_rust(value) unless cache
       camel_lower_cache[value] ||= camel_lower_rust(value)
     end
 
-    def dash(value, cache=false)
+    def dash(value, cache = false)
       return dash_rust(value) unless cache
       dash_cache[value] ||= dash_rust(value)
     end
 
-    def underscore(value, cache=false)
+    def underscore(value, cache = false)
       return underscore_rust(value) unless cache
       underscore_cache[value] ||= underscore_rust(value)
     end
