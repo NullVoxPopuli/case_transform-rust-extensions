@@ -13,4 +13,47 @@ func = Fiddle::Function.new(
   library['initialize_case_transform'],
   [], Fiddle::TYPE_VOIDP
 )
+module CaseTransform
+  class << self
+    def camel_cache
+      @camel_cache ||= {}
+    end
+
+    def camel_lower_cache
+      @camel_lower_cache ||= {}
+    end
+
+    def dash_cache
+      @dash_cache ||= {}
+    end
+
+    def underscore_cache
+      @underscore_cache ||= {}
+    end
+
+    def camel(value, cache = false)
+      return camel_rust(value) unless cache
+      camel_cache[value] ||= camel_rust(value)
+    end
+
+    def camel_lower(value, cache = false)
+      return camel_lower_rust(value) unless cache
+      camel_lower_cache[value] ||= camel_lower_rust(value)
+    end
+
+    def dash(value, cache = false)
+      return dash_rust(value) unless cache
+      dash_cache[value] ||= dash_rust(value)
+    end
+
+    def underscore(value, cache = false)
+      return underscore_rust(value) unless cache
+      underscore_cache[value] ||= underscore_rust(value)
+    end
+
+    def unaltered(value)
+      value
+    end
+  end
+end
 func.call

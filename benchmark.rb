@@ -21,30 +21,35 @@ hash = {
 
 Benchmark.bench('camel',
   time: time, disable_gc: disable_gc,
+  rust_memo: -> { CaseTransform.camel(hash, true) },
   rust: -> { CaseTransform.camel(hash) },
   memoized_ruby: -> { MemoizedRubyCaseTransform.camel(hash) },
   ruby: -> { RubyCaseTransform.camel(hash) })
 
 Benchmark.bench('camel_lower',
   time: time, disable_gc: disable_gc,
+  rust_memo: -> { CaseTransform.camel_lower(hash, true) },
   rust: -> { CaseTransform.camel_lower(hash) },
   memoized_ruby: -> { MemoizedRubyCaseTransform.camel_lower(hash) },
   ruby: -> { RubyCaseTransform.camel_lower(hash) })
 
 Benchmark.bench('dash',
   time: time, disable_gc: disable_gc,
+  rust_memo: -> { CaseTransform.dash(hash, true) },
   rust: -> { CaseTransform.dash(hash) },
   memoized_ruby: -> { MemoizedRubyCaseTransform.dash(hash) },
   ruby: -> { RubyCaseTransform.dash(hash) })
 
 Benchmark.bench('unaltered',
   time: time, disable_gc: disable_gc,
+  rust_memo: -> { CaseTransform.unaltered(hash) },
   rust: -> { CaseTransform.unaltered(hash) },
   memoized_ruby: -> { MemoizedRubyCaseTransform.unaltered(hash) },
   ruby: -> { RubyCaseTransform.unaltered(hash) })
 
 Benchmark.bench('underscore',
   time: time, disable_gc: disable_gc,
+  rust_memo: -> { CaseTransform.underscore(hash, true) },
   rust: -> { CaseTransform.underscore(hash) },
   memoized_ruby: -> { MemoizedRubyCaseTransform.underscore(hash) },
   ruby: -> { RubyCaseTransform.underscore(hash) })

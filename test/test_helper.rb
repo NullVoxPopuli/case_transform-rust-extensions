@@ -11,3 +11,4 @@ require 'case_transform'
 require 'minitest'
 require 'minitest/autorun'
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
+OBJ = Object.new
