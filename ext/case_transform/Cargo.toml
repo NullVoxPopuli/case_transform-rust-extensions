@@ -13,5 +13,5 @@ name = "case_transform"
 crate-type = ["dylib"]
 
 [dependencies]
-inflections = { git = "https://github.com/calebmer/inflections" }
+Inflector = "0.6.0"
 ruru = "0.8.0"

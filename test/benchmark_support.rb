@@ -7,7 +7,7 @@ require 'pry-byebug'
 # https://github.com/ruby-bench/ruby-bench-suite/blob/master/rails/benchmarks/support/benchmark_rails.rb
 module Benchmark
   module CaseTransform
-    def bench(label = nil, time: 10, disable_gc: true, warmup: 3, rust: nil, ruby: nil, memoized_ruby: nil)
+    def bench(label = nil, time: 10, disable_gc: true, warmup: 3, rust: nil, ruby: nil, memoized_ruby: nil, rust_memo: nil)
       if disable_gc
         GC.disable
       else
@@ -15,6 +15,7 @@ module Benchmark
       end
 
       Benchmark.ips(time, warmup, true) do |x|
+        x.report('Memoized Rust: ' + label) { rust_memo.call }
         x.report('Rust: ' + label) { rust.call }
         x.report('Ruby: ' + label) { ruby.call }
         x.report('Memoized Ruby: ' + label) { memoized_ruby.call }

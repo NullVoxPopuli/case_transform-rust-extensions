@@ -1,9 +1,8 @@
 #[macro_use]
 extern crate ruru;
-extern crate inflections;
+extern crate inflector;
 
-// use inflector::cases::{camelcase, classcase, kebabcase, snakecase};
-use inflections::Inflect;
+use inflector::Inflector;
 
 use ruru::{Class, Object, VerifiedObject, RString, Hash, Array, Symbol, AnyObject};
 use ruru::types::ValueType;
@@ -88,22 +87,18 @@ fn transform(object: AnyObject, key_transform: &Fn(String) -> String) -> AnyObje
 }
 
 fn to_pascal_case(key: String) -> String {
-    // classcase::to_class_case(key)
     key.to_pascal_case()
 }
 
 fn to_camel_case(key: String) -> String {
-    // camelcase::to_camel_case(key)
     key.to_camel_case()
 }
 
 fn to_dashed_case(key: String) -> String {
-    // kebabcase::to_kebab_case(key)
     key.to_kebab_case()
 }
 
 fn to_snake_case(key: String) -> String {
-    // snakecase::to_snake_case(key)
     key.to_snake_case()
 }
 
@@ -118,16 +113,14 @@ methods! (
     fn camel_lower(object: AnyObject) -> AnyObject { transform(object.unwrap(), &to_camel_case) }
     fn dash(object: AnyObject) -> AnyObject { transform(object.unwrap(), &to_dashed_case) }
     fn underscore(object: AnyObject) -> AnyObject { transform(object.unwrap(), &to_snake_case) }
-    fn unaltered(object: AnyObject) -> AnyObject { object.unwrap() }
 );
 
 #[no_mangle]
 pub extern "C" fn initialize_case_transform() {
     Class::from_existing("CaseTransform").define(|itself| {
-        itself.def_self("camel", camel);
-        itself.def_self("camel_lower", camel_lower);
-        itself.def_self("dash", dash);
-        itself.def_self("underscore", underscore);
-        itself.def_self("unaltered", unaltered);
+        itself.def_self("camel_rust", camel);
+        itself.def_self("camel_lower_rust", camel_lower);
+        itself.def_self("dash_rust", dash);
+        itself.def_self("underscore_rust", underscore);
     });
 }
