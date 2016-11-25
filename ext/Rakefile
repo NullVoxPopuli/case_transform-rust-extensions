@@ -1,0 +1,9 @@
+require 'thermite/tasks'
+
+ext_dir = File.dirname(__FILE__)
+project_dir = File.dirname(ext_dir)
+Thermite::Tasks.new(
+  cargo_project_path: "#{ext_dir}/case_transform",
+  ruby_project_path: project_dir
+)
+task default: %w(thermite:build)
