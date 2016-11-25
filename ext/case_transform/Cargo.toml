@@ -7,6 +7,7 @@ repository = "https://github.com/NullVoxPopuli/case_transform"
 [package.metadata.thermite]
 github_releases = true
 github_release_type = "latest"
+cargo_project_path = "ext/case_transform"
 
 [lib]
 name = "case_transform"
