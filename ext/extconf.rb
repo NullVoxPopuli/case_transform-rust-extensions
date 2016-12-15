@@ -7,7 +7,7 @@ create_makefile 'rutgem'
 mkf = %(
 .ONESHELL:
 all:
-	cd case_transform
+	cd case_transform && \
 	sh ./build.sh
 
 clean:
