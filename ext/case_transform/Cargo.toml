@@ -14,4 +14,4 @@ crate-type = ["dylib"]
 
 [dependencies]
 inflections = { git = "https://github.com/calebmer/inflections" }
-ruru = "0.8.0"
+ruru = "0.9.3"

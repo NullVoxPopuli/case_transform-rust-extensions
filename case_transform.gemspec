@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
 
   s.extensions = Dir['ext/extconf.rb']
+  s.extensions << 'ext/Rakefile'
 
   s.test_files = s.files.grep(%r{^(test|spec|features)/})
 
