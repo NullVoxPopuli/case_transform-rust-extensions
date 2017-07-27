@@ -4,7 +4,7 @@ extern crate inflections;
 
 // use inflector::cases::{camelcase, classcase, kebabcase, snakecase};
 use inflections::Inflect;
-use std::any::Any;
+// use std::any::Any;
 // use helix::{ExceptionInfo};
 
 ruby! {
@@ -25,27 +25,8 @@ ruby! {
         def unaltered(object: Any) -> Any {
             object.unwrap()
         }
-
     }
 }
-
-use helix::{UncheckedValue, ToRust};
-
-impl ToString for String {
-    fn to_string(&self) -> String {
-        let checked = self.helix.to_checked().unwrap();
-        checked.to_rust()
-    }
-}
-
-
-impl AsRef<[usize]> for Array {
-    fn as_ref(&self) -> &[usize] {
-        let checked = self.helix.to_checked().unwrap();
-        checked.to_rust()
-    }
-}
-
 
 impl Transform for Any {
     fn transform(&self, _transform_function: &Fn(String) -> String) -> Any {
@@ -106,8 +87,7 @@ trait Transform: Any {
 trait TryTransform: Any {
     fn try_transform<T>(&self,
                         transform_function: &Fn(String) -> String)
-                        -> Result<Any, RuruError>
-        where T: VerifiedObject + Transform
+                        -> Result<Any, std::io::Error>
     {
         self.try_convert_to::<T>().map(|object| object.transform(transform_function))
     }
