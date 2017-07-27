@@ -6,12 +6,44 @@ extern crate inflections;
 use inflections::Inflect;
 use std::any::Any;
 
+ruby! {
+    class CaseTransform {
+        def camel(object: Any) -> Any {
+            transform(object.unwrap(), &to_pascal_case)
+        }
 
-use helix::{RubyString, Array, Symbol, Hash};
+        def camel_lower(object: Any) -> Any {
+            transform(object.unwrap(), &to_camel_case)
+        }
+        def dash(object: Any) -> Any {
+            transform(object.unwrap(), &to_dashed_case)
+        }
+        def underscore(object: Any) -> Any {
+            transform(object.unwrap(), &to_snake_case)
+        }
+        def unaltered(object: Any) -> Any {
+            object.unwrap()
+        }
 
-// use ruru::{Class, Object, VerifiedObject, RString, Hash, Array, Symbol, AnyObject};
-// use ruru::types::ValueType;
-// use ruru::result::Error as RuruError;
+    }
+}
+
+use helix::{UncheckedValue, ToRust};
+
+impl ToString for RubyString {
+    fn to_string(&self) -> String {
+        let checked = self.helix.to_checked().unwrap();
+        checked.to_rust()
+    }
+}
+
+
+impl AsRef<[usize]> for Array {
+    fn as_ref(&self) -> &[usize] {
+        let checked = self.helix.to_checked().unwrap();
+        checked.to_rust()
+    }
+}
 
 
 impl Transform for Any {
@@ -66,7 +98,11 @@ impl Transform for Array {
     }
 }
 
-trait TryTransform: Object {
+trait Transform: Any {
+    fn transform(&self, transform_function: &Fn(String) -> String) -> Any;
+}
+
+trait TryTransform: Any {
     fn try_transform<T>(&self,
                         transform_function: &Fn(String) -> String)
                         -> Result<Any, RuruError>
@@ -106,38 +142,4 @@ fn to_dashed_case(key: String) -> String {
 fn to_snake_case(key: String) -> String {
     // snakecase::to_snake_case(key)
     key.to_snake_case()
-}
-
-
-ruby! {
-    class CaseTransform {
-        def camel(string: RubyString) -> String {
-            transform(string.unwrap(), &to_pascal_case)
-        }
-
-        def camel(object: Array) -> Array {
-            transform(object.unwrap(), &to_pascal_case)
-        }
-
-        def camel(object: Symbol) -> Symbol {
-            transform(object.unwrap(), &to_pascal_case)
-        }
-
-        def camel(object: Hash) -> Hash {
-            transform(object.unwrap(), &to_pascal_case)
-        }
-        // def camel_lower(object: AnyObject) -> AnyObject {
-        //     transform(object.unwrap(), &to_camel_case)
-        // }
-        // def dash(object: AnyObject) -> AnyObject {
-        //     transform(object.unwrap(), &to_dashed_case)
-        // }
-        // def underscore(object: AnyObject) -> AnyObject {
-        //     transform(object.unwrap(), &to_snake_case)
-        // }
-        // def unaltered(object: AnyObject) -> AnyObject {
-        //     object.unwrap()
-        // }
-
-    }
 }
