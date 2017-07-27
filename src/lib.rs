@@ -1,34 +1,35 @@
 #[macro_use]
-extern crate ruru;
+extern crate helix;
 extern crate inflections;
 
 // use inflector::cases::{camelcase, classcase, kebabcase, snakecase};
 use inflections::Inflect;
+use std::any::Any;
 
-use ruru::{Class, Object, VerifiedObject, RString, Hash, Array, Symbol, AnyObject};
-use ruru::types::ValueType;
-use ruru::result::Error as RuruError;
 
-trait Transform: Object {
-    fn transform(&self, transform_function: &Fn(String) -> String) -> AnyObject;
-}
+use helix::{RubyString, Array, Symbol, Hash};
 
-impl Transform for AnyObject {
-    fn transform(&self, _transform_function: &Fn(String) -> String) -> AnyObject {
-        self.clone()
+// use ruru::{Class, Object, VerifiedObject, RString, Hash, Array, Symbol, AnyObject};
+// use ruru::types::ValueType;
+// use ruru::result::Error as RuruError;
+
+
+impl Transform for Any {
+    fn transform(&self, _transform_function: &Fn(String) -> String) -> Any {
+        self
     }
 }
 
-impl Transform for RString {
-    fn transform(&self, transform_function: &Fn(String) -> String) -> AnyObject {
+impl Transform for RubyString {
+    fn transform(&self, transform_function: &Fn(String) -> String) -> Any {
         let result = transform_function(self.to_string());
 
-        RString::new(&result).to_any_object()
+        RubyString::new(&result).to_any_object()
     }
 }
 
 impl Transform for Symbol {
-    fn transform(&self, transform_function: &Fn(String) -> String) -> AnyObject {
+    fn transform(&self, transform_function: &Fn(String) -> String) -> Any {
         let result = transform_function(self.to_string());
 
         Symbol::new(&result).to_any_object()
@@ -36,13 +37,13 @@ impl Transform for Symbol {
 }
 
 impl Transform for Hash {
-    fn transform(&self, transform_function: &Fn(String) -> String) -> AnyObject {
+    fn transform(&self, transform_function: &Fn(String) -> String) -> Any {
         let mut result = Hash::new();
 
         self.each(|key, value| {
             let new_key = transform(key, transform_function);
             let new_value = match value.ty() {
-                ValueType::Hash => transform(value, transform_function),
+                Hash => transform(value, transform_function),
                 _ => value,
             };
 
@@ -68,21 +69,21 @@ impl Transform for Array {
 trait TryTransform: Object {
     fn try_transform<T>(&self,
                         transform_function: &Fn(String) -> String)
-                        -> Result<AnyObject, RuruError>
+                        -> Result<Any, RuruError>
         where T: VerifiedObject + Transform
     {
         self.try_convert_to::<T>().map(|object| object.transform(transform_function))
     }
 }
 
-impl TryTransform for AnyObject {}
+impl TryTransform for Any {}
 
-fn transform(object: AnyObject, key_transform: &Fn(String) -> String) -> AnyObject {
-    let result = object.try_transform::<RString>(key_transform)
+fn transform(object: Any, key_transform: &Fn(String) -> String) -> Any {
+    let result = object.try_transform::<RubyString>(key_transform)
         .or_else(|_| object.try_transform::<Symbol>(key_transform))
         .or_else(|_| object.try_transform::<Array>(key_transform))
         .or_else(|_| object.try_transform::<Hash>(key_transform))
-        .or_else(|_| object.try_transform::<AnyObject>(key_transform));
+        .or_else(|_| object.try_transform::<Any>(key_transform));
 
     result.unwrap()
 }
@@ -108,26 +109,35 @@ fn to_snake_case(key: String) -> String {
 }
 
 
-class!(CaseTransform);
+ruby! {
+    class CaseTransform {
+        def camel(string: RubyString) -> String {
+            transform(string.unwrap(), &to_pascal_case)
+        }
 
-methods! (
-    CaseTransform,
-    _itself,
+        def camel(object: Array) -> Array {
+            transform(object.unwrap(), &to_pascal_case)
+        }
 
-    fn camel(object: AnyObject) -> AnyObject { transform(object.unwrap(), &to_pascal_case) }
-    fn camel_lower(object: AnyObject) -> AnyObject { transform(object.unwrap(), &to_camel_case) }
-    fn dash(object: AnyObject) -> AnyObject { transform(object.unwrap(), &to_dashed_case) }
-    fn underscore(object: AnyObject) -> AnyObject { transform(object.unwrap(), &to_snake_case) }
-    fn unaltered(object: AnyObject) -> AnyObject { object.unwrap() }
-);
+        def camel(object: Symbol) -> Symbol {
+            transform(object.unwrap(), &to_pascal_case)
+        }
 
-#[no_mangle]
-pub extern "C" fn initialize_case_transform() {
-    Class::from_existing("CaseTransform").define(|itself| {
-        itself.def_self("camel", camel);
-        itself.def_self("camel_lower", camel_lower);
-        itself.def_self("dash", dash);
-        itself.def_self("underscore", underscore);
-        itself.def_self("unaltered", unaltered);
-    });
+        def camel(object: Hash) -> Hash {
+            transform(object.unwrap(), &to_pascal_case)
+        }
+        // def camel_lower(object: AnyObject) -> AnyObject {
+        //     transform(object.unwrap(), &to_camel_case)
+        // }
+        // def dash(object: AnyObject) -> AnyObject {
+        //     transform(object.unwrap(), &to_dashed_case)
+        // }
+        // def underscore(object: AnyObject) -> AnyObject {
+        //     transform(object.unwrap(), &to_snake_case)
+        // }
+        // def unaltered(object: AnyObject) -> AnyObject {
+        //     object.unwrap()
+        // }
+
+    }
 }

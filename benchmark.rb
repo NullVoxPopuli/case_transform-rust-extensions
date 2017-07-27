@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative './test/benchmark_support'
 require_relative './test/ruby_case_transform'
 require_relative './test/memoized_ruby_case_transform'

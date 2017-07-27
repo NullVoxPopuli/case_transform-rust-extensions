@@ -3,6 +3,7 @@ Cargo.lock
 Gemfile.lock
 /lib/case_transform/native.bundle
 target/
+*.so
 
 *.gem
 *.rbc
