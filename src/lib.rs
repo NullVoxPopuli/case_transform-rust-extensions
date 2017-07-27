@@ -5,6 +5,7 @@ extern crate inflections;
 // use inflector::cases::{camelcase, classcase, kebabcase, snakecase};
 use inflections::Inflect;
 use std::any::Any;
+// use helix::{ExceptionInfo};
 
 ruby! {
     class CaseTransform {
@@ -30,7 +31,7 @@ ruby! {
 
 use helix::{UncheckedValue, ToRust};
 
-impl ToString for RubyString {
+impl ToString for String {
     fn to_string(&self) -> String {
         let checked = self.helix.to_checked().unwrap();
         checked.to_rust()
@@ -52,11 +53,11 @@ impl Transform for Any {
     }
 }
 
-impl Transform for RubyString {
+impl Transform for String {
     fn transform(&self, transform_function: &Fn(String) -> String) -> Any {
         let result = transform_function(self.to_string());
 
-        RubyString::new(&result).to_any_object()
+        String::new(&result).to_any_object()
     }
 }
 
@@ -87,7 +88,7 @@ impl Transform for Hash {
 }
 
 impl Transform for Array {
-    fn transform(&self, transform_function: &Fn(String) -> String) -> AnyObject {
+    fn transform(&self, transform_function: &Fn(String) -> String) -> Any {
         // Temp hack to consume &self for iterator
         let result = unsafe { self.to_any_object().to::<Array>() };
 
@@ -115,7 +116,7 @@ trait TryTransform: Any {
 impl TryTransform for Any {}
 
 fn transform(object: Any, key_transform: &Fn(String) -> String) -> Any {
-    let result = object.try_transform::<RubyString>(key_transform)
+    let result = object.try_transform::<String>(key_transform)
         .or_else(|_| object.try_transform::<Symbol>(key_transform))
         .or_else(|_| object.try_transform::<Array>(key_transform))
         .or_else(|_| object.try_transform::<Hash>(key_transform))
